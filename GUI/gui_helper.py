@@ -36,7 +36,7 @@ def hamming_score(y_true, y_pred):
     return np.mean(acc_list)
 
 
-path = 'resnet_1.pt'
+path = '../resnet_1.pt'
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 model = models.resnet18(pretrained=True)
 num_ftrs = model.fc.in_features

@@ -13,7 +13,7 @@ dicom = pydicom.dcmread('../rsna-intracranial-hemorrhage-detection/stage_2_train
 import albumentations
 from torch.utils.data import DataLoader
 
-path = 'resnet_1.pt'
+path = '../resnet_1.pt'
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 model = models.resnet18(pretrained=True)
 num_ftrs = model.fc.in_features
