@@ -10,13 +10,12 @@ train_images_dir = '../rsna-intracranial-hemorrhage-detection/stage_2_train/'
 train_metadata_csv = '../rsna-intracranial-hemorrhage-detection/train_metadata_noidx.csv'
 test_metadata_csv = '../rsna-intracranial-hemorrhage-detection/test_metadata_noidx.csv'
 
-train = pd.read_csv(os.path.join(dir_csv,'stage_2_train.csv'))
+train = pd.read_csv(os.path.join(dir_csv, 'stage_2_train.csv'))
 test = pd.read_csv(os.path.join(dir_csv, 'stage_2_sample_submission.csv'))
 
 # Read metadata for train/validation split
 test_metadata_noidx = pd.read_csv(test_metadata_csv)
 train_metadata_noidx = pd.read_csv(train_metadata_csv)
-
 
 COLS = ['epidural', 'intraparenchymal', 'intraventricular', 'subarachnoid', 'subdural', 'any']
 
@@ -38,10 +37,9 @@ train_series = train_metadata_noidx['SeriesInstanceUID'].unique()
 
 n = len(train_series)
 
-merged_train.to_csv('five_train.csv', index = False)
-valid_series = train[int(n*80/100):]
-train_series = train[:int(n*80/100)]
-
+merged_train.to_csv('five_train.csv', index=False)
+valid_series = train[int(n * 80 / 100):]
+train_series = train[:int(n * 80 / 100)]
 
 """#train.to_csv('train.csv', index=False)
 print(train['any'].value_counts())
@@ -59,4 +57,3 @@ print(valid['intraparenchymal'].value_counts())
 print(valid['intraventricular'].value_counts())
 print(valid['subarachnoid'].value_counts())
 print(valid['subdural'].value_counts())"""
-

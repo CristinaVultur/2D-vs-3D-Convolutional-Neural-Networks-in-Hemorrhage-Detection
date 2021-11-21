@@ -1,14 +1,14 @@
-
 import numpy as np
 import pandas as pd
 import pydicom
 import torch
 from torch.utils.data import Dataset
-from PIL import ImageTk,Image
-import matplotlib.pyplot as plt
+
+
 def normalize_minmax(img):
     mi, ma = img.min(), img.max()
     return (img - mi) / (ma - mi)
+
 
 def correct_dcm(dcm):
     x = dcm.pixel_array + 1000
@@ -17,6 +17,8 @@ def correct_dcm(dcm):
     dcm.PixelData = x.tobytes()
     dcm.RescaleIntercept = -1000
 
+
+# get the HU window that we need
 
 def window_image(dcm, window_center, window_width):
     if (dcm.BitsStored == 12) and (dcm.PixelRepresentation == 0) and (int(dcm.RescaleIntercept) > -100):
@@ -30,6 +32,8 @@ def window_image(dcm, window_center, window_width):
     return img
 
 
+# make an RGB like image from the three HU windows that we chose
+
 def bsb_window(dcm):
     brain_img = window_image(dcm, 40, 80)
     subdural_img = window_image(dcm, 80, 200)
@@ -42,10 +46,8 @@ def bsb_window(dcm):
 
     return bsb_img
 
-#read and prind a ct scan
 
-
-class TwoDCCN_Dataset(Dataset):
+class TwoDCCNDataset(Dataset):
 
     def __init__(self, csv_file, path, labels, transform=None):
         self.path = path
@@ -69,10 +71,10 @@ class TwoDCCN_Dataset(Dataset):
         if self.labels:
 
             labels = torch.tensor(self.data.loc[
-            idx, ['epidural', 'intraparenchymal', 'intraventricular', 'subarachnoid', 'subdural', 'any']])
+                                      idx, ['epidural', 'intraparenchymal', 'intraventricular', 'subarachnoid',
+                                            'subdural', 'any']])
             return {'image': img, 'labels': labels}
 
         else:
 
             return {'image': img}
-

@@ -24,18 +24,16 @@ warnings.filterwarnings("ignore", category=DeprecationWarning)
 warnings.filterwarnings("ignore", category=UserWarning)
 warnings.filterwarnings("ignore", category=FutureWarning)
 
-from os import listdir, mkdir
-dicom = pydicom.dcmread('../rsna-intracranial-hemorrhage-detection/1000_train/' + 'ID_0000f1657' + '.dcm')
-print(dicom)
-print(dicom.pixel_array)
+
+dir_csv = '../rsna-intracranial-hemorrhage-detection'
+train = pd.read_csv(os.path.join(dir_csv, 'stage_2_train.csv'))
 
 train = pd.read_csv('scans_with_lables.csv')
 
-dir_csv = '../rsna-intracranial-hemorrhage-detection'
-#test_images_dir = '../rsna-intracranial-hemorrhage-detection/stage_2_test/'
+
 train_images_dir = '../rsna-intracranial-hemorrhage-detection/stage_2_train/'
 reconstructions = 'scans_reconstruction.csv'
-#test_metadata_csv = 'test_scans_reconstruction.csv'
+
 
 # Read metadata for train/validation split
 #reconstructions_pd = pd.read_csv(reconstructions)
@@ -86,8 +84,6 @@ pad = len(train_scans[max_idx])
 for key in list(train_scans.keys()):
     for i in range(pad-len(train_scans[key])):
         train_scans[key].append('Pad')
-
-#resample(get_pixels_hu(train_scans[max_idx]),train_scans[max_idx])
 
 
 """#train_scan_pd = pd.DataFrame.from_dict(train_scans)

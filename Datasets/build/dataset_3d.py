@@ -1,19 +1,12 @@
 import pandas as pd
-import imageio
-import pydicom
-import glob
 import os
 import shutil
 
 src_dir = '../rsna-intracranial-hemorrhage-detection/stage_2_train/'
 dest_dir = '../rsna-intracranial-hemorrhage-detection/3d_train/'
-#vols = imageio.mvolread(dirname, 'DICOM')
+
 scans = pd.read_csv('scans_reconstruction.csv')
-#source_folder=input(src_dir)
-#destination_folder = input(dest_dir)
-#extension = input('.dcm')
 print(scans.loc[scans.list_items.str.match('ID_000012eaf')]['list_id'])
-#print(vols.shape)
 
 
 
@@ -32,14 +25,13 @@ print()
 
 
 #shutil.copy(src_dir + value[0] +'.dcm', dest_dir)
+
 for filename in os.listdir(src_dir):
     getName, exe = filename.split('.')
     n = not scans[scans.list_items.str.match(getName)].empty
     ok = [scans.loc[scans.list_items.str.match(getName), 'list_id']] in columSeries.values
     if n and ok:
         shutil.copy(src_dir + filename, dest_dir)
-
-
 
 
 n = len(labels)

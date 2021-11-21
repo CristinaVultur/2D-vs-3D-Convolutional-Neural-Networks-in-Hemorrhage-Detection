@@ -6,7 +6,6 @@ from torchvision import models
 import torch.nn as nn
 import pydicom
 from Datasets.TwoDDATA import correct_dcm, bsb_window
-from PIL import ImageTk,Image
 from pytorch_grad_cam import GradCAM, \
                              ScoreCAM, \
                              GradCAMPlusPlus, \

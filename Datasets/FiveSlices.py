@@ -3,16 +3,15 @@ import numpy as np
 import torch
 import pandas as pd
 import pydicom
-import albumentations
-from albumentations.pytorch import ToTensor
 from Datasets.TwoDDATA import correct_dcm
-class FiveSlices_Dataset(Dataset):
 
-    def __init__(self, merged_csv, path, transform = None):
+
+class FiveSlicesDataset(Dataset):
+
+    def __init__(self, merged_csv, path, transform=None):
         self.path = path
         self.data = pd.read_csv(merged_csv)
         self.transform = transform
-
 
     def __len__(self):
         return len(self.data)
@@ -26,10 +25,12 @@ class FiveSlices_Dataset(Dataset):
             slices = slices.reset_index(drop=True)
             idx_list = slices.index[slices['Image'] == slice].to_list()
             new_idx = idx_list[0]
-            for i in range(-2,3):
+
+            # merge the 2 slices from the right, our slice, and the 2 slices from the left
+            for i in range(-2, 3):
                 if new_idx - i >= 0 and new_idx + i < len(self.data):
                     s = slices.loc[new_idx - i, 'Image']
-                    dcm = pydicom.dcmread(self.path +s+'.dcm')
+                    dcm = pydicom.dcmread(self.path + s + '.dcm')
                     if (dcm.BitsStored == 12) and (dcm.PixelRepresentation == 0) and (int(dcm.RescaleIntercept) > -100):
                         correct_dcm(dcm)
                     else:
@@ -54,14 +55,7 @@ class FiveSlices_Dataset(Dataset):
             vol = torch.from_numpy(image).float()
         vol = torch.unsqueeze(vol, 0)
         labels = torch.tensor(self.data.loc[
-                                  idx, ['epidural', 'intraparenchymal', 'intraventricular', 'subarachnoid', 'subdural','any']])
+                                  idx, ['epidural', 'intraparenchymal', 'intraventricular', 'subarachnoid', 'subdural',
+                                        'any']])
         out_lables = labels.float()
         return {'image': vol, 'labels': out_lables}
-
-
-"""d =FiveSlices_Dataset(merged_csv='valid.csv',path= '../rsna-intracranial-hemorrhage-detection/stage_2_train/', transform=albumentations.Compose(
-                                               [albumentations.Resize(256, 256),
-                                                albumentations.Normalize(mean=[0.1738], std=[0.3161],
-                                                          max_pixel_value=1.),
-                                               ToTensor()]))
-"""
